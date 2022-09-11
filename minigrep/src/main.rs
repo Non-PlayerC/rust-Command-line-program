@@ -1,16 +1,23 @@
 use std::env;
-use std::fs;
+use std::process;
+
+use minigrep::Config;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let query = &args[1];
-    let filename = &args[2]; //- 收集命令行的参数并保存到 vector 中
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        println!("解析参数的问题: {}", err);
+        process::exit(1);
+    });
 
-    //-- 读取文件内容
-    println!("In file {}", filename);
+    println!("查找 {}", config.query);
+    println!("文件 {}", config.filename);
 
-    let contents = fs::read_to_string(filename).expect("Something now wrong reading the file"); //-- 读取文件测试
+    // 处理 main 函数中的错误逻辑
+    if let Err(e) = minigrep::run(config) {
+        println!("Application error : {}", e);
 
-    print!("With text:\n{}", contents)
+        process::exit(1)
+    }
 }
