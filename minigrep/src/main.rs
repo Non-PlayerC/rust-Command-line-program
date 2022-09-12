@@ -16,7 +16,7 @@ fn main() {
 
     // 处理 main 函数中的错误逻辑
     if let Err(e) = minigrep::run(config) {
-        println!("Application error : {}", e);
+        eprintln!("Application error : {}", e); //将错误打印到控制台，并将内容输出到指定文件
 
         process::exit(1)
     }
